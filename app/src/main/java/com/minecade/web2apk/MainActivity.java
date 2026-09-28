@@ -19,8 +19,18 @@ public final class MainActivity extends android.app.Activity {
     }
 
     private void openWebsite() {
-        Uri uri = Uri.parse(BuildConfig.WEBSITE_URL);
+        int resourceId = getResources().getIdentifier(
+                "website_url",
+                "string",
+                getPackageName()
+        );
 
+        if (resourceId == 0) {
+            finish();
+            return;
+        }
+
+        Uri uri = Uri.parse(getString(resourceId));
         CustomTabsIntent customTabsIntent = new CustomTabsIntent.Builder().build();
 
         try {
