@@ -2,10 +2,8 @@ plugins {
     id("com.android.application")
 }
 
-val appName = providers.gradleProperty("web2apk.appName").orElse("Website")
 val appVersion = providers.gradleProperty("web2apk.version").orElse("1.0.0")
 val packageSuffix = providers.gradleProperty("web2apk.packageSuffix").orElse("website")
-val websiteUrl = providers.gradleProperty("web2apk.websiteUrl").orElse("https://example.com/")
 
 android {
     namespace = "com.minecade.${packageSuffix.get()}"
@@ -38,13 +36,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-
-    buildFeatures {
-        buildConfig = true
-    }
-
-    buildConfigField("String", "WEBSITE_URL", "\"${websiteUrl.get().replace("\\", "\\\\").replace("\"", "\\\"")}\"")
-    buildConfigField("String", "APP_VERSION", "\"${appVersion.get().replace("\"", "\\\"")}\"")
 }
 
 dependencies {
