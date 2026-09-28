@@ -1,0 +1,17 @@
+# Gradle
+.gradle/
+build/
+**/build/
+
+# Android Studio / IntelliJ
+.idea/
+*.iml
+
+# Local configuration
+local.properties
+
+# Generated Web2APK icon resources
+app/src/main/res/drawable-nodpi/app_icon.png
+
+# Generated build output
+output/
