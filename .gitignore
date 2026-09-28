@@ -10,8 +10,9 @@ build/
 # Local configuration
 local.properties
 
-# Generated Web2APK icon resources
+# Generated Web2APK resources
 app/src/main/res/drawable-nodpi/app_icon.png
+app/src/main/res/values/generated.xml
 
 # Generated build output
 output/
