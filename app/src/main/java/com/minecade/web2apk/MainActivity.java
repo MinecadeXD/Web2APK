@@ -11,14 +11,24 @@ import androidx.core.splashscreen.SplashScreen;
 
 public final class MainActivity extends android.app.Activity {
 
+    private boolean websiteLaunchAttempted;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         SplashScreen.installSplashScreen(this);
         super.onCreate(savedInstanceState);
-        openWebsite();
+
+        if (savedInstanceState == null) {
+            openWebsite();
+        }
     }
 
     private void openWebsite() {
+        if (websiteLaunchAttempted) {
+            return;
+        }
+        websiteLaunchAttempted = true;
+
         int resourceId = getResources().getIdentifier(
                 "website_url",
                 "string",
@@ -26,7 +36,6 @@ public final class MainActivity extends android.app.Activity {
         );
 
         if (resourceId == 0) {
-            finish();
             return;
         }
 
@@ -40,6 +49,7 @@ public final class MainActivity extends android.app.Activity {
             startActivity(fallback);
         }
 
-        finish();
+        // Do not finish this Activity. Keeping it alive preserves the app's
+        // launcher task while the Custom Tab is displayed.
     }
 }
