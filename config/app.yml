@@ -1,0 +1,113 @@
+# ============================================================
+#                 WEBSITE → APK CONFIGURATION
+# ============================================================
+#
+# Web2APK converts a website into a lightweight Android APK.
+#
+# Configure the values below and run the GitHub Actions build.
+#
+# ============================================================
+
+
+# ------------------------------------------------------------
+# APP NAME
+# ------------------------------------------------------------
+#
+# What it is:
+#   The name displayed in the Android app drawer.
+#
+# Allowed input:
+#   Normal text.
+#
+# Example:
+#   app_name: "HidenCloud FreePanel"
+#
+app_name: "Website"
+
+
+# ------------------------------------------------------------
+# WEBSITE URL
+# ------------------------------------------------------------
+#
+# What it is:
+#   The HTTPS website that opens when the app starts.
+#
+# Allowed input:
+#   A complete HTTPS URL.
+#
+# Example:
+#   website_url: "https://freepanel.hidencloud.com/"
+#
+website_url: "https://example.com/"
+
+
+# ------------------------------------------------------------
+# APP VERSION
+# ------------------------------------------------------------
+#
+# What it is:
+#   The version of the generated Android application.
+#
+# Allowed input:
+#   Three-part version such as:
+#   1.0.0
+#   1.2.3
+#   2.0.0
+#
+# Example:
+#   version: "1.0.0"
+#
+version: "1.0.0"
+
+
+# ------------------------------------------------------------
+# PACKAGE NAME SUFFIX
+# ------------------------------------------------------------
+#
+# What it is:
+#   The final part of the Android package name.
+#
+# The complete package name becomes:
+#
+#   com.minecade.<package_suffix>
+#
+# Allowed input:
+#   Lowercase letters (a-z), numbers (0-9), and periods (.).
+#
+# Must start and end with a letter or number.
+#
+# Examples:
+#
+#   package_suffix: "freepanel"
+#   → com.minecade.freepanel
+#
+#   package_suffix: "mywebsite"
+#   → com.minecade.mywebsite
+#
+package_suffix: "website"
+
+
+# ------------------------------------------------------------
+# APP ICON
+# ------------------------------------------------------------
+#
+# What it is:
+#   The launcher icon for the generated Android application.
+#
+# Allowed input:
+#   Path to a PNG image inside this repository.
+#
+# Recommended:
+#   PNG
+#   1024 × 1024 px
+#   Square
+#   RGB or RGBA
+#
+# Example:
+#   icon: "config/icon.png"
+#
+# If the icon file does not exist:
+#   Web2APK automatically generates an icon using the first
+#   letter of the app name on a white background.
+#
+icon: "config/icon.png"
