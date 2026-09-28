@@ -1,0 +1,67 @@
+name: Build Web2APK
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "config/**"
+      - "app/**"
+      - "scripts/**"
+      - ".github/workflows/build.yml"
+      - "*.gradle.kts"
+      - "gradle.properties"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install build-script dependencies
+        run: python -m pip install --disable-pip-version-check --no-input pyyaml pillow
+
+      - name: Validate configuration and generate Android resources
+        run: python scripts/prepare_build.py
+
+      - name: Set up Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v5
+        with:
+          gradle-version: "9.6.0"
+
+      - name: Build release APK
+        run: >
+          gradle
+          :app:assembleRelease
+          --no-daemon
+          -Pweb2apk.version="$WEB2APK_VERSION"
+          -Pweb2apk.versionCode="$WEB2APK_VERSION_CODE"
+          -Pweb2apk.packageSuffix="$WEB2APK_PACKAGE_SUFFIX"
+
+      - name: Rename APK
+        run: |
+          mkdir -p output
+          cp app/build/outputs/apk/release/app-release.apk "output/${WEB2APK_APP_NAME}-v${WEB2APK_VERSION}.apk"
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Web2APK-${{ env.WEB2APK_VERSION }}
+          path: output/*.apk
+          if-no-files-found: error
