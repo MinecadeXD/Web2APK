@@ -4,14 +4,13 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.core.splashscreen.SplashScreen;
 
 public final class MainActivity extends android.app.Activity {
-
-    private boolean websiteLaunchAttempted;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -24,32 +23,32 @@ public final class MainActivity extends android.app.Activity {
     }
 
     private void openWebsite() {
-        if (websiteLaunchAttempted) {
-            return;
-        }
-        websiteLaunchAttempted = true;
+        String websiteUrl = getString(R.string.website_url);
+        Uri uri = Uri.parse(websiteUrl);
 
-        int resourceId = getResources().getIdentifier(
-                "website_url",
-                "string",
-                getPackageName()
-        );
-
-        if (resourceId == 0) {
-            return;
-        }
-
-        Uri uri = Uri.parse(getString(resourceId));
-        CustomTabsIntent customTabsIntent = new CustomTabsIntent.Builder().build();
+        CustomTabsIntent customTabsIntent = new CustomTabsIntent.Builder()
+                .setShowTitle(true)
+                .build();
 
         try {
             customTabsIntent.launchUrl(this, uri);
         } catch (ActivityNotFoundException exception) {
-            Intent fallback = new Intent(Intent.ACTION_VIEW, uri);
-            startActivity(fallback);
-        }
+            Toast.makeText(
+                    this,
+                    "No browser supporting Custom Tabs is installed.",
+                    Toast.LENGTH_LONG
+            ).show();
 
-        // Do not finish this Activity. Keeping it alive preserves the app's
-        // launcher task while the Custom Tab is displayed.
+            Intent fallback = new Intent(Intent.ACTION_VIEW, uri);
+            try {
+                startActivity(fallback);
+            } catch (ActivityNotFoundException ignored) {
+                Toast.makeText(
+                        this,
+                        "Unable to open the website.",
+                        Toast.LENGTH_LONG
+                ).show();
+            }
+        }
     }
 }
