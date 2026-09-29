@@ -22,7 +22,7 @@
 # Example:
 #   app_name: "HidenCloud FreePanel"
 #
-app_name: "CSM Testcenter"
+app_name: "CSM Testcenter2"
 
 
 # ------------------------------------------------------------
@@ -57,7 +57,7 @@ website_url: "https://www.csm-testcenter.org/test?do=show&subdo=common&test=file
 # Example:
 #   version: "1.0.0"
 #
-version: "1.7.2"
+version: "1.7.3"
 
 
 # ------------------------------------------------------------
@@ -84,7 +84,7 @@ version: "1.7.2"
 #   package_suffix: "mywebsite"
 #   → com.minecade.mywebsite
 #
-package_suffix: "csm"
+package_suffix: "csm2"
 
 
 # ------------------------------------------------------------
@@ -110,4 +110,4 @@ package_suffix: "csm"
 #   Web2APK automatically generates an icon using the first
 #   letter of the app name on a white background.
 #
-icon: "config/icon.jpg"
+icon: "config/icon.jpeg"
