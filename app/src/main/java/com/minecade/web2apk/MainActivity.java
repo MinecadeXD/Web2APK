@@ -2,11 +2,13 @@ package com.minecade.web2apk;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.browser.customtabs.CustomTabColorSchemeParams;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.core.splashscreen.SplashScreen;
 
@@ -40,8 +42,15 @@ public final class MainActivity extends android.app.Activity {
         String websiteUrl = getString(R.string.website_url);
         Uri uri = Uri.parse(websiteUrl);
 
+        CustomTabColorSchemeParams colorSchemeParams = new CustomTabColorSchemeParams.Builder()
+                .setToolbarColor(Color.parseColor("#121212"))
+                .build();
+
         CustomTabsIntent customTabsIntent = new CustomTabsIntent.Builder()
                 .setShowTitle(true)
+                .setUrlBarHidingEnabled(true)
+                .setDefaultColorSchemeParams(colorSchemeParams)
+                .setCloseButtonPosition(CustomTabsIntent.CLOSE_BUTTON_POSITION_DEFAULT)
                 .build();
 
         try {
