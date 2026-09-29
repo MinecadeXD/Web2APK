@@ -30,7 +30,7 @@
 - 🎨 Custom Android Custom Tab toolbar color.
 - 📝 Option to show or hide the website title in the toolbar.
 - 🔒 HTTPS-only URL validation.
-- 📦 Generated APKs are uploaded as GitHub Actions artifacts.
+- 📦 Generated APKs are uploaded as GitHub Actions artifacts(<1MB).
 - ▶️ Builds can also be started manually with **workflow_dispatch**.
 
 ---
