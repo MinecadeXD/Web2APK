@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 import re
+import subprocess
 from pathlib import Path
 
 import yaml
@@ -36,9 +37,37 @@ def required_string(data: dict, key: str) -> str:
 def version_code(version: str) -> int:
     major, minor, patch = (int(part) for part in version.split("."))
     code = major * 1_000_000 + minor * 1_000 + patch
+    if code < 1:
+        fail("version must produce a positive Android versionCode.")
     if code > 2_100_000_000:
         fail("version produces an Android versionCode above the supported range.")
     return code
+
+
+def validate_version(version: str, code: int) -> None:
+    try:
+        result = subprocess.run(
+            [
+                "git",
+                "ls-remote",
+                "--tags",
+                "--refs",
+                "origin",
+                f"refs/tags/v{version}",
+                f"refs/tags/{version}",
+            ],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+    except (OSError, subprocess.CalledProcessError) as exc:
+        fail(f"could not check existing Git tags for version {version}: {exc}")
+
+    if result.stdout.strip():
+        fail(
+            f"version {version} is already used by an existing Git tag. "
+            "Choose a new MAJOR.MINOR.PATCH version."
+        )
 
 
 def parse_bool(data: dict, key: str, default: bool) -> bool:
@@ -144,10 +173,23 @@ def load_icon(icon_path: str, app_name: str) -> Image.Image:
     return generate_fallback_icon(app_name)
 
 
+def clean_generated_resources() -> None:
+    generated_files = [
+        DRAWABLE_DIR / "app_icon.png",
+        DRAWABLE_DIR / "app_icon_foreground.png",
+        DRAWABLE_DIR / "splash_icon.png",
+        MIPMAP_DIR / "app_icon.xml",
+        FALLBACK_VECTOR,
+        VALUES_DIR / "colors.xml",
+        VALUES_DIR / "generated.xml",
+    ]
+    for path in generated_files:
+        path.unlink(missing_ok=True)
+
+
 def write_icon(image: Image.Image) -> None:
     DRAWABLE_DIR.mkdir(parents=True, exist_ok=True)
     MIPMAP_DIR.mkdir(parents=True, exist_ok=True)
-    FALLBACK_VECTOR.unlink(missing_ok=True)
 
     # Keep the full-size launcher icon, but create a padded copy for the
     # Android 12+ splash screen. The splash icon is masked, so padding keeps
@@ -250,6 +292,9 @@ def main() -> None:
     if not VERSION_RE.fullmatch(version):
         fail("version must use MAJOR.MINOR.PATCH format, for example 1.0.0.")
 
+    current_version_code = version_code(version)
+    validate_version(version, current_version_code)
+
     if not PACKAGE_SUFFIX_RE.fullmatch(package_suffix):
         fail(
             "package_suffix may contain only lowercase letters, numbers, and periods; "
@@ -261,6 +306,8 @@ def main() -> None:
 
     if len(package_suffix) > 80:
         fail("package_suffix must be 80 characters or fewer.")
+
+    clean_generated_resources()
 
     image = load_icon(icon_path, app_name)
     write_icon(image)
@@ -274,7 +321,7 @@ def main() -> None:
             "WEB2APK_APP_NAME": app_name,
             "WEB2APK_WEBSITE_URL": website_url,
             "WEB2APK_VERSION": version,
-            "WEB2APK_VERSION_CODE": str(version_code(version)),
+            "WEB2APK_VERSION_CODE": str(current_version_code),
             "WEB2APK_PACKAGE_SUFFIX": package_suffix,
             "WEB2APK_SAFE_NAME": safe_name,
             "WEB2APK_SPLASH_BACKGROUND": splash_background,
@@ -288,7 +335,7 @@ def main() -> None:
     print(f"App name:       {app_name}")
     print(f"Website URL:    {website_url}")
     print(f"Version:        {version}")
-    print(f"Version code:   {version_code(version)}")
+    print(f"Version code:   {current_version_code}")
     print(f"Package name:   com.minecade.{package_suffix}")
     print(f"Icon source:    {icon_path}")
     print(f"Splash color:   {splash_background}")
