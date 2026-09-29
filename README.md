@@ -25,55 +25,12 @@
 - 🏷️ Custom app name and Android package suffix.
 - 🔢 Semantic app versioning with automatic Android `versionCode` generation.
 - 🖼️ Custom PNG, JPG, or JPEG launcher icon.
-- 🔤 Automatic letter-icon fallback when the configured icon is missing.
 - 🎨 Custom splash-screen background color.
 - 🎨 Custom Android Custom Tab toolbar color.
 - 📝 Option to show or hide the website title in the toolbar.
-- 📱 Optional URL-bar hiding while scrolling.
 - 🔒 HTTPS-only URL validation.
-- 🧹 Generated Android resources are cleaned before every build.
-- 🛡️ Release builds use R8/minification and resource shrinking.
-- ✅ CI verifies the generated APK's signature and important Android metadata.
-- 📋 GitHub Actions generates a build summary containing the app name, package, version, website URL, and APK filename.
 - 📦 Generated APKs are uploaded as GitHub Actions artifacts.
-- 🚫 Automatic builds run only when `config/app.yml` changes on `main`.
 - ▶️ Builds can also be started manually with **workflow_dispatch**.
-
----
-
-## 📖 How Web2APK Works
-
-Web2APK keeps the Android project small and puts the customization in `config/app.yml`.
-
-The build process is:
-
-```text
-config/app.yml
-      │
-      ▼
-scripts/prepare_build.py
-      │
-      ├── Validate configuration
-      ├── Check version/tag rules
-      ├── Clean generated resources
-      ├── Generate icon and Android resources
-      └── Export build values to GitHub Actions
-      │
-      ▼
-GitHub Actions
-      │
-      ├── Set up Python
-      ├── Set up Java 17
-      ├── Build release APK with Gradle
-      ├── Verify APK
-      ├── Generate build summary
-      └── Upload APK artifact
-      │
-      ▼
-Generated Android APK
-```
-
-The Android application opens the configured website using an Android **Custom Tab**. If a Custom Tab is unavailable, the application can fall back to the available browser handling on the device.
 
 ---
 
@@ -83,9 +40,21 @@ The Android application opens the configured website using an Android **Custom T
 
 Fork this repository to your own GitHub account.
 
-You do not need to copy any private credentials from the original repository. GitHub Actions secrets are not transferred to forks.
 
-### 2. Edit the configuration
+### 2. Add your icon (optional)
+
+If you want a custom launcher icon, place a PNG, JPG, or JPEG file inside `config` folder and name it `icon.png/.jpeg/.jpg` .
+
+Recommended:
+
+- Square image
+- 1024 × 1024 px(At least 192 × 192 px)
+- PNG, JPG, or JPEG
+
+If the configured file does not exist, Web2APK automatically generates a simple icon using the first letter of the app name.
+
+
+### 3. Edit the configuration
 
 Open:
 
@@ -102,35 +71,18 @@ app_name: "My Website"
 website_url: "https://example.com/"
 version: "1.0.0"
 package_suffix: "mywebsite"
-
 icon: "config/icon.png"
-
 splash_background: "#FFFFFF"
 toolbar_color: "#121212"
-
 show_title: true
 url_bar_hiding: true
 ```
-
-### 3. Add your icon (optional)
-
-If you want a custom launcher icon, place a PNG, JPG, or JPEG file inside the repository and point `icon` to it.
-
-Recommended:
-
-- Square image
-- 1024 × 1024 px
-- At least 192 × 192 px
-- PNG, JPG, or JPEG
-- RGB or RGBA
-
-If the configured file does not exist, Web2APK automatically generates a simple icon using the first letter of the app name.
 
 ### 4. Commit the configuration
 
 Commit and push your changes to the `main` branch.
 
-Because the workflow is path-filtered, a push to `main` automatically starts a build **only when `config/app.yml` changed**.
+It will automatically start a workflow to generate the APK.
 
 ### 5. Get the APK
 
@@ -189,22 +141,6 @@ version: "1.2.3"
 ```
 
 Minor and patch values must be between `0` and `999`.
-
-Web2APK automatically converts the version into an Android `versionCode`:
-
-```text
-MAJOR × 1,000,000
-+ MINOR × 1,000
-+ PATCH
-```
-
-For example:
-
-```text
-1.2.3 → 1,002,003
-```
-
-The build also checks Git tags so an already-used version cannot accidentally be reused.
 
 ---
 
@@ -275,13 +211,7 @@ splash_background: "#121212"
 
 Allowed values:
 
-```yaml
-splash_background: white
-splash_background: black
-splash_background: "#121212"
-```
-
-Only `white`, `black`, or a 6-digit hexadecimal color is accepted.
+Allowed values are `white`, `black`, or a 6-digit hexadecimal color.
 
 ---
 
@@ -356,129 +286,6 @@ This prevents invalid configuration from reaching the Android build stage.
 
 ---
 
-## 🔢 Versioning
-
-Web2APK uses two related Android version values:
-
-| Value | Source |
-|---|---|
-| Version name | `version` in `config/app.yml` |
-| Version code | Automatically generated from `version` |
-
-For example:
-
-| Version | Android versionCode |
-|---|---:|
-| `1.0.0` | `1000000` |
-| `1.2.3` | `1002003` |
-| `2.0.0` | `2000000` |
-
-Avoid reusing a version that already has a corresponding Git tag.
-
----
-
-## 🔐 APK Signing
-
-The repository's current build configuration creates a technically signed release APK using the Android/Gradle debug signing configuration.
-
-This is useful for simple testing and GitHub Actions builds, but **it is not the same as signing an app with your own production release keystore**.
-
-If you fork Web2APK and intend to publish your APK through an app store or maintain long-term public releases:
-
-1. Create your own Android release keystore.
-2. Store signing credentials securely as GitHub Actions secrets.
-3. Configure your fork's release build to use those credentials.
-4. Never commit a keystore or signing passwords to the repository.
-5. Keep the same signing key for future updates of the same published Android application.
-
-GitHub Actions secrets from the original repository are not copied into forks.
-
----
-
-## 🤖 GitHub Actions
-
-The workflow is located at:
-
-```text
-.github/workflows/build.yml
-```
-
-### Automatic builds
-
-A build automatically starts when:
-
-- the branch is `main`
-- and `config/app.yml` changed
-
-Changes to unrelated files do not automatically trigger the workflow.
-
-### Manual builds
-
-The workflow also supports manual execution through GitHub Actions:
-
-```text
-Actions
-→ Build Web2APK
-→ Run workflow
-```
-
-### Build stages
-
-The workflow:
-
-1. Checks out the repository.
-2. Sets up Python 3.12.
-3. Installs the build-script dependencies.
-4. Validates the configuration.
-5. Generates Android resources.
-6. Sets up Java 17.
-7. Sets up Gradle.
-8. Builds the release APK.
-9. Renames the APK.
-10. Verifies the APK signature and metadata.
-11. Generates a GitHub Actions summary.
-12. Uploads the APK as an artifact.
-
----
-
-## 🛡️ Release Build Checks
-
-The CI workflow verifies that the generated APK:
-
-- Exists at the expected path.
-- Has a valid Android APK signature.
-- Contains the expected package name.
-- Contains the expected version name.
-- Contains the expected version code.
-- Contains the expected application name.
-
-The release build also enables:
-
-- **R8 / code minification**
-- **Resource shrinking**
-
-This keeps the generated APK smaller and removes unused code/resources where possible.
-
----
-
-## 📦 APK Output
-
-The generated APK is renamed using this format:
-
-```text
-<AppName>-v<Version>.apk
-```
-
-Example:
-
-```text
-My Website-v1.0.0.apk
-```
-
-The APK is uploaded to the GitHub Actions workflow run as an artifact.
-
----
-
 ## 🗂️ Repository Structure
 
 ```text
@@ -507,45 +314,13 @@ Generated files are intentionally ignored where appropriate and recreated during
 
 ---
 
-## 🧹 Clean Builds
-
-Before generating Android resources, Web2APK removes previously generated resources such as:
-
-- Generated launcher icons
-- Generated splash icon
-- Generated color resources
-- Generated configuration resources
-- Generated adaptive icon resources
-
-This prevents stale configuration from leaking into a later build.
-
----
-
-## 💻 Local Development
-
-The normal intended workflow is **GitHub Actions**, so you do not need Android Studio just to generate the APK.
-
-For development or troubleshooting, the repository contains a standard Gradle Android project.
-
-The build environment used by CI includes:
-
-- Python 3.12
-- Java 17
-- Gradle 9.6.0
-- Android SDK / Android Gradle Plugin
-- Python packages: PyYAML and Pillow
-
-The configuration script expects to run inside GitHub Actions because it writes build values to the GitHub Actions environment.
-
----
-
 ## 📱 Android Compatibility
 
 The application is configured with:
 
-- **Minimum Android SDK:** 23
-- **Target Android SDK:** 36
-- **Compile SDK:** 36
+- **Minimum Android SDK:** 23(Android 6.0)
+- **Target Android SDK:** 36(Android 16)
+- **Compile SDK:** 36(Android 16)
 
 The final website experience can still depend on the Android device's browser/Custom Tab implementation and the website itself.
 
@@ -560,7 +335,6 @@ Your website should:
 - Work correctly in a mobile browser.
 - Have responsive/mobile-friendly layouts if you want a good phone experience.
 - Not rely on desktop-only interactions.
-- Allow required JavaScript, cookies, storage, authentication, and other browser functionality as needed by the site.
 
 Web2APK does not convert a website into native Android screens. It packages a lightweight Android application that opens the website through Android's browser-based Custom Tab experience.
 
@@ -654,20 +428,6 @@ Before making a pull request:
 
 ---
 
-## 📄 License
-
-Web2APK is released under the **MIT License**.
-
-See [LICENSE](LICENSE) for the full license text.
-
----
-
-## 👤 Author
-
-Developed by **Minecade**.
-
----
-
 ## ⭐ Support the Project
 
 If Web2APK is useful to you:
@@ -679,7 +439,16 @@ If Web2APK is useful to you:
 
 ---
 
+## 📄 License
+
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for the full license text.
+
+---
+
 <div align="center">
+
+### Made with ♥️ by [Minecade](https://github.com/MinecadeXD)
+
 
 **Web2APK — configure once, build with GitHub Actions, get an Android APK.**
 
