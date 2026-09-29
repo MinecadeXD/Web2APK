@@ -60,25 +60,6 @@ def parse_color(data: dict, key: str, default: str) -> str:
     fail(f"'{key}' must be 'white', 'black', or a 6-digit hex color such as #121212.")
 
 
-def parse_bool(data: dict, key: str, default: bool) -> bool:
-    value = data.get(key, default)
-    if not isinstance(value, bool):
-        fail(f"'{key}' must be true or false.")
-    return value
-
-
-def parse_color(data: dict, key: str, default: str) -> str:
-    value = data.get(key, default)
-    if not isinstance(value, str) or not value.strip():
-        fail(f"'{key}' must be a color name (white/black) or a 6-digit hex color.")
-    value = value.strip().lower()
-    if value in {"white", "black"}:
-        return "#FFFFFF" if value == "white" else "#000000"
-    if HEX_COLOR_RE.fullmatch(value):
-        return value.upper()
-    fail(f"'{key}' must be 'white', 'black', or a 6-digit hex color such as #121212.")
-\n\ndef parse_bool(data: dict, key: str, default: bool) -> bool:\n    value = data.get(key, default)\n    if not isinstance(value, bool):\n        fail(f"'{key}' must be true or false.")\n    return value\n\n\ndef parse_color(data: dict, key: str, default: str) -> str:\n    value = data.get(key, default)\n    if not isinstance(value, str) or not value.strip():\n        fail(f"'{key}' must be a color name (white/black) or a 6-digit hex color.")\n    value = value.strip().lower()\n    if value in {"white", "black"}:\n        return "#FFFFFF" if value == "white" else "#000000"\n    if HEX_COLOR_RE.fullmatch(value):\n        return value.upper()\n    fail(f"'{key}' must be 'white', 'black', or a 6-digit hex color such as #121212.")\n
-
 def xml_escape(value: str) -> str:
     return (
         value.replace("&", "&amp;")
@@ -258,7 +239,7 @@ def main() -> None:
     splash_background = parse_color(data, "splash_background", "white")
     toolbar_color = parse_color(data, "toolbar_color", "#121212")
     show_title = parse_bool(data, "show_title", True)
-    url_bar_hiding = parse_bool(data, "url_bar_hiding", True)\n    splash_background = parse_color(data, "splash_background", "white")\n    toolbar_color = parse_color(data, "toolbar_color", "#121212")\n    show_title = parse_bool(data, "show_title", True)\n    url_bar_hiding = parse_bool(data, "url_bar_hiding", True)
+    url_bar_hiding = parse_bool(data, "url_bar_hiding", True)
 
     if not APP_NAME_RE.fullmatch(app_name):
         fail("app_name must contain 1-60 characters.")
@@ -299,9 +280,9 @@ def main() -> None:
             "WEB2APK_SPLASH_BACKGROUND": splash_background,
             "WEB2APK_TOOLBAR_COLOR": toolbar_color,
             "WEB2APK_SHOW_TITLE": str(show_title).lower(),
-            "WEB2APK_URL_BAR_HIDING": str(url_bar_hiding).lower(),\n            "WEB2APK_SPLASH_BACKGROUND": splash_background,\n            "WEB2APK_TOOLBAR_COLOR": toolbar_color,\n            "WEB2APK_SHOW_TITLE": str(show_title).lower(),\n            "WEB2APK_URL_BAR_HIDING": str(url_bar_hiding).lower(),
+            "WEB2APK_URL_BAR_HIDING": str(url_bar_hiding).lower(),
         }
-    )
+    )    )
 
     print("Configuration validated successfully.")
     print(f"App name:       {app_name}")
@@ -314,6 +295,20 @@ def main() -> None:
     print(f"Toolbar color:  {toolbar_color}")
     print(f"Show title:     {show_title}")
     print(f"URL bar hiding: {url_bar_hiding}")\n    print(f"Splash color:   {splash_background}")\n    print(f"Toolbar color:  {toolbar_color}")\n    print(f"Show title:     {show_title}")\n    print(f"URL bar hiding: {url_bar_hiding}")
+
+
+if __name__ == "__main__":
+    main()    print("Configuration validated successfully.")
+    print(f"App name:       {app_name}")
+    print(f"Website URL:    {website_url}")
+    print(f"Version:        {version}")
+    print(f"Version code:   {version_code(version)}")
+    print(f"Package name:   com.minecade.{package_suffix}")
+    print(f"Icon source:    {icon_path}")
+    print(f"Splash color:   {splash_background}")
+    print(f"Toolbar color:  {toolbar_color}")
+    print(f"Show title:     {show_title}")
+    print(f"URL bar hiding: {url_bar_hiding}")
 
 
 if __name__ == "__main__":
