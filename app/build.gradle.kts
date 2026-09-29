@@ -6,7 +6,7 @@ val appVersion = providers.gradleProperty("web2apk.version").orElse("1.0.0")
 val packageSuffix = providers.gradleProperty("web2apk.packageSuffix").orElse("website")
 
 android {
-    namespace = "com.minecade.${packageSuffix.get()}"
+    namespace = "com.minecade.web2apk"
     compileSdk = 36
 
     defaultConfig {
