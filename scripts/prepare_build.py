@@ -17,7 +17,7 @@ VALUES_DIR = RES_DIR / "values"
 FALLBACK_VECTOR = RES_DIR / "drawable" / "app_icon.xml"
 
 APP_NAME_RE = re.compile(r"^.{1,60}$", re.DOTALL)
-VERSION_RE = re.compile(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$")
+VERSION_RE = re.compile(r"^(0|[1-9]\d*)\.(0|[1-9]\d{0,2})\.(0|[1-9]\d{0,2})$")
 PACKAGE_SUFFIX_RE = re.compile(r"^[a-z0-9]+(?:\.[a-z0-9]+)*$")
 URL_RE = re.compile(r"^https://[^\s]+$", re.IGNORECASE)
 HEX_COLOR_RE = re.compile(r"^#[0-9A-Fa-f]{6}$")
@@ -290,7 +290,7 @@ def main() -> None:
         fail("website_url must be a complete HTTPS URL.")
 
     if not VERSION_RE.fullmatch(version):
-        fail("version must use MAJOR.MINOR.PATCH format, for example 1.0.0.")
+        fail("version must use MAJOR.MINOR.PATCH format with MINOR and PATCH from 0 to 999, for example 1.0.0.")
 
     current_version_code = version_code(version)
     validate_version(version, current_version_code)
