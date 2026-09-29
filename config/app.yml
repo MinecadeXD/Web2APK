@@ -110,7 +110,7 @@ package_suffix: "website"
 #   Web2APK automatically generates an icon using the first
 #   letter of the app name on a white background.
 #
-icon: "config/icon.jpeg"
+icon: "config/icon.png"
 
 
 # ------------------------------------------------------------
