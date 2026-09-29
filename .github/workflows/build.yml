@@ -59,6 +59,77 @@ jobs:
           mkdir -p output
           cp app/build/outputs/apk/release/app-release.apk "output/${WEB2APK_SAFE_NAME}-v${WEB2APK_VERSION}.apk"
 
+      - name: Verify release APK
+        env:
+          EXPECTED_APP_NAME: ${{ env.WEB2APK_APP_NAME }}
+          EXPECTED_VERSION: ${{ env.WEB2APK_VERSION }}
+          EXPECTED_VERSION_CODE: ${{ env.WEB2APK_VERSION_CODE }}
+          EXPECTED_PACKAGE: com.minecade.${{ env.WEB2APK_PACKAGE_SUFFIX }}
+          APK_PATH: output/${{ env.WEB2APK_SAFE_NAME }}-v${{ env.WEB2APK_VERSION }}.apk
+        run: |
+          set -euo pipefail
+
+          if [ ! -f "$APK_PATH" ]; then
+            echo "Verification failed: APK was not created at '$APK_PATH'."
+            exit 1
+          fi
+
+          APKSIGNER="$(find "$ANDROID_HOME/build-tools" -type f -name apksigner | sort -V | tail -n 1)"
+          AAPT2="$(find "$ANDROID_HOME/build-tools" -type f -name aapt2 | sort -V | tail -n 1)"
+
+          if [ -z "$APKSIGNER" ] || [ -z "$AAPT2" ]; then
+            echo "Verification failed: Android SDK build-tools are missing apksigner or aapt2."
+            exit 1
+          fi
+
+          echo "Checking APK signature..."
+          "$APKSIGNER" verify --verbose "$APK_PATH"
+
+          echo "Reading APK metadata..."
+          BADGING="$(mktemp)"
+          "$AAPT2" dump badging "$APK_PATH" > "$BADGING"
+
+          PACKAGE_LINE="$(grep -m1 '^package:' "$BADGING" || true)"
+          APPLICATION_LINE="$(grep -m1 '^application:' "$BADGING" || true)"
+
+          echo "Package metadata: $PACKAGE_LINE"
+          echo "Application metadata: $APPLICATION_LINE"
+
+          EXPECTED_PACKAGE="$EXPECTED_PACKAGE" EXPECTED_VERSION="$EXPECTED_VERSION" EXPECTED_VERSION_CODE="$EXPECTED_VERSION_CODE" EXPECTED_APP_NAME="$EXPECTED_APP_NAME" PACKAGE_LINE="$PACKAGE_LINE" APPLICATION_LINE="$APPLICATION_LINE" python - <<'PY'
+          import os
+          import re
+          import sys
+
+          def field(line: str, name: str) -> str | None:
+              match = re.search(r"(?:^| )" + re.escape(name) + r"='([^']*)'", line)
+              return match.group(1) if match else None
+
+          package_line = os.environ["PACKAGE_LINE"]
+          application_line = os.environ["APPLICATION_LINE"]
+          checks = [
+              ("package name", field(package_line, "name"), os.environ["EXPECTED_PACKAGE"]),
+              ("version name", field(package_line, "versionName"), os.environ["EXPECTED_VERSION"]),
+              ("version code", field(package_line, "versionCode"), os.environ["EXPECTED_VERSION_CODE"]),
+              ("app name", field(application_line, "label"), os.environ["EXPECTED_APP_NAME"]),
+          ]
+
+          failed = False
+          for name, actual, expected in checks:
+              if actual != expected:
+                  print(f"FAIL: {name}: expected {expected!r}, got {actual!r}")
+                  failed = True
+              else:
+                  print(f"PASS: {name}: {actual}")
+
+          if failed:
+              print("Verification failed: APK metadata does not match config/app.yml.")
+              sys.exit(1)
+
+          print("All APK verification checks passed.")
+          PY
+
+          rm -f "$BADGING"
+
       - name: Upload release APK artifact
         uses: actions/upload-artifact@v4
         with:
