@@ -7,8 +7,9 @@
 [![Built with HTML](https://img.shields.io/badge/Website-HTTPS-0A66C2?logo=googlechrome&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTTP)
 [![Android](https://img.shields.io/badge/Platform-Android-3DDC84?logo=android&logoColor=white)](https://developer.android.com)
 [![Python](https://img.shields.io/badge/Build_Script-Python-3776AB?logo=python&logoColor=white)](https://www.python.org)
+[![Java](https://img.shields.io/badge/Java-17-ED8B00?logo=openjdk&logoColor=white)](https://www.oracle.com/java/)
+<br>
 [![GitHub Actions](https://img.shields.io/badge/Build-GitHub_Actions-2088FF?logo=githubactions&logoColor=white)](https://github.com/features/actions)
-[![Version](https://img.shields.io/badge/Version-1.0.0-blue)](https://github.com/MinecadeXD/Web2APK/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 *A simple, configuration-driven Android wrapper for websites. Configure your website once, let GitHub Actions build the APK, and download the generated artifact.*
