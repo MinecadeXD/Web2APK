@@ -295,9 +295,18 @@ Web2APK/
 │       └── build.yml
 ├── app/
 │   ├── build.gradle.kts
+│   ├── proguard-rules.pro
 │   └── src/
 │       └── main/
+│           ├── AndroidManifest.xml
+│           ├── java/
+│           │   └── com/
+│           │       └── minecade/
+│           │           └── web2apk/
+│           │               └── MainActivity.java
 │           └── res/
+│               ├── drawable/
+│               └── values/
 ├── config/
 │   └── app.yml
 ├── scripts/
