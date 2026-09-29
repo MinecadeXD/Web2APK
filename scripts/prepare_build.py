@@ -282,23 +282,9 @@ def main() -> None:
             "WEB2APK_SHOW_TITLE": str(show_title).lower(),
             "WEB2APK_URL_BAR_HIDING": str(url_bar_hiding).lower(),
         }
-    )    )
+    )
 
     print("Configuration validated successfully.")
-    print(f"App name:       {app_name}")
-    print(f"Website URL:    {website_url}")
-    print(f"Version:        {version}")
-    print(f"Version code:   {version_code(version)}")
-    print(f"Package name:   com.minecade.{package_suffix}")
-    print(f"Icon source:    {icon_path}")
-    print(f"Splash color:   {splash_background}")
-    print(f"Toolbar color:  {toolbar_color}")
-    print(f"Show title:     {show_title}")
-    print(f"URL bar hiding: {url_bar_hiding}")\n    print(f"Splash color:   {splash_background}")\n    print(f"Toolbar color:  {toolbar_color}")\n    print(f"Show title:     {show_title}")\n    print(f"URL bar hiding: {url_bar_hiding}")
-
-
-if __name__ == "__main__":
-    main()    print("Configuration validated successfully.")
     print(f"App name:       {app_name}")
     print(f"Website URL:    {website_url}")
     print(f"Version:        {version}")
