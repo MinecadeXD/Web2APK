@@ -95,10 +95,10 @@ package_suffix: "csm"
 #   The launcher icon for the generated Android application.
 #
 # Allowed input:
-#   Path to a PNG image inside this repository.
+#   Path to a PNG, JPG, or JPEG image inside this repository.
 #
 # Recommended:
-#   PNG
+#   PNG, JPG, or JPEG
 #   1024 × 1024 px
 #   Square
 #   RGB or RGBA
