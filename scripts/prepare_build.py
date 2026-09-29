@@ -11,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 CONFIG_PATH = ROOT / "config" / "app.yml"
 RES_DIR = ROOT / "app" / "src" / "main" / "res"
 DRAWABLE_DIR = RES_DIR / "drawable-nodpi"
+MIPMAP_DIR = RES_DIR / "mipmap-anydpi-v26"
 VALUES_DIR = RES_DIR / "values"
 FALLBACK_VECTOR = RES_DIR / "drawable" / "app_icon.xml"
 
@@ -125,12 +126,27 @@ def load_icon(icon_path: str, app_name: str) -> Image.Image:
 
 def write_icon(image: Image.Image) -> None:
     DRAWABLE_DIR.mkdir(parents=True, exist_ok=True)
+    MIPMAP_DIR.mkdir(parents=True, exist_ok=True)
     FALLBACK_VECTOR.unlink(missing_ok=True)
 
     # Keep the full-size launcher icon, but create a padded copy for the
     # Android 12+ splash screen. The splash icon is masked, so padding keeps
     # artwork near the edges from being clipped.
     image.save(DRAWABLE_DIR / "app_icon.png", format="PNG", optimize=True)
+
+    # Generate a padded adaptive-icon foreground so Android launchers can apply
+    # their shape mask without clipping the supplied artwork.
+    adaptive_foreground = Image.new("RGBA", (1024, 1024), (0, 0, 0, 0))
+    adaptive_image = ImageOps.contain(image, (720, 720), method=Image.Resampling.LANCZOS)
+    x = (1024 - adaptive_image.width) // 2
+    y = (1024 - adaptive_image.height) // 2
+    adaptive_foreground.alpha_composite(adaptive_image, (x, y))
+    adaptive_foreground.save(DRAWABLE_DIR / "app_icon_foreground.png", format="PNG", optimize=True)
+
+    (MIPMAP_DIR / "app_icon.xml").write_text(
+        '<?xml version="1.0" encoding="utf-8"?>\n<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">\n    <background android:drawable="@color/app_icon_background" />\n    <foreground android:drawable="@drawable/app_icon_foreground" />\n</adaptive-icon>\n',
+        encoding="utf-8",
+    )
 
     splash = Image.new("RGBA", (1024, 1024), (0, 0, 0, 0))
     splash_size = 640
@@ -153,6 +169,7 @@ def write_resources(app_name: str, website_url: str, rgb: tuple[int, int, int]) 
         f'''<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="splash_background">{hex_color}</color>
+    <color name="app_icon_background">{hex_color}</color>
 </resources>
 ''',
         encoding="utf-8",
