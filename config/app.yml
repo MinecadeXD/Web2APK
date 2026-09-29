@@ -110,4 +110,4 @@ package_suffix: "csm"
 #   Web2APK automatically generates an icon using the first
 #   letter of the app name on a white background.
 #
-icon: "config/icon.png"
+icon: "config/icon.jpg"
