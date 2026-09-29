@@ -22,6 +22,7 @@
 
 - 🌐 Wrap any **HTTPS website** in an Android application.
 - ⚙️ Configure the app from a single file: `config/app.yml`.
+- 🌐 Opens websites using Android Custom Tabs.
 - 🏷️ Custom app name and Android package suffix.
 - 🔢 Semantic app versioning with automatic Android `versionCode` generation.
 - 🖼️ Custom PNG, JPG, or JPEG launcher icon.
@@ -43,12 +44,12 @@ Fork this repository to your own GitHub account.
 
 ### 2. Add your icon (optional)
 
-If you want a custom launcher icon, place a PNG, JPG, or JPEG file inside `config` folder and name it `icon.png/.jpeg/.jpg` .
+If you want a custom launcher icon, place a PNG, JPG, or JPEG file inside `config` folder and name it `icon.png` .
 
 Recommended:
 
 - Square image
-- 1024 × 1024 px(At least 192 × 192 px)
+- 1024 × 1024 px (at least 192 × 192 px)
 - PNG, JPG, or JPEG
 
 If the configured file does not exist, Web2APK automatically generates a simple icon using the first letter of the app name.
@@ -209,8 +210,6 @@ Background color used by the splash screen and generated adaptive icon backgroun
 splash_background: "#121212"
 ```
 
-Allowed values:
-
 Allowed values are `white`, `black`, or a 6-digit hexadecimal color.
 
 ---
@@ -327,9 +326,9 @@ Generated files are intentionally ignored where appropriate and recreated during
 
 The application is configured with:
 
-- **Minimum Android SDK:** 23(Android 6.0)
-- **Target Android SDK:** 36(Android 16)
-- **Compile SDK:** 36(Android 16)
+- **Minimum Android SDK:** 23 (Android 6.0)
+- **Target Android SDK:** 36 (Android 16)
+- **Compile SDK:** 36 (Android 16)
 
 The final website experience can still depend on the Android device's browser/Custom Tab implementation and the website itself.
 
