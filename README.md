@@ -356,6 +356,18 @@ That means:
 
 ---
 
+## 🚨 Website Usage & Redistribution
+
+Web2APK may be used to package **any HTTPS website for personal, private use**, including websites that the user does not own.
+
+However, users must **not publicly distribute, publish, sell, share, or otherwise redistribute** an APK containing a website that they do not own or have explicit authorization to package and distribute.
+
+Before distributing a generated APK, users are responsible for ensuring that they have the necessary rights and permissions to use the website's content, branding, trademarks, and other intellectual property.
+
+Web2APK does not verify website ownership or authorization. Users are solely responsible for how they use and distribute generated APKs.
+
+---
+
 ## 🐛 Troubleshooting
 
 ### The workflow does not start
