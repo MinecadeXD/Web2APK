@@ -4,12 +4,7 @@ on:
   push:
     branches: ["main"]
     paths:
-      - "config/**"
-      - "app/**"
-      - "scripts/**"
-      - ".github/workflows/build.yml"
-      - "*.gradle.kts"
-      - "gradle.properties"
+      - "config/app.yml"
   workflow_dispatch:
 
 permissions:
@@ -143,11 +138,11 @@ jobs:
             echo
             echo "| Field | Value |"
             echo "|---|---|"
-            echo "| App name | \`$WEB2APK_APP_NAME\` |"
-            echo "| Package | \`$SUMMARY_PACKAGE\` |"
-            echo "| Version | \`$WEB2APK_VERSION\` |"
+            echo "| App name | `$WEB2APK_APP_NAME` |"
+            echo "| Package | `$SUMMARY_PACKAGE` |"
+            echo "| Version | `$WEB2APK_VERSION` |"
             echo "| Website URL | $WEB2APK_WEBSITE_URL |"
-            echo "| APK filename | \`$SUMMARY_APK\` |"
+            echo "| APK filename | `$SUMMARY_APK` |"
           } >> "$GITHUB_STEP_SUMMARY"
       - name: Upload release APK artifact
         uses: actions/upload-artifact@v4
