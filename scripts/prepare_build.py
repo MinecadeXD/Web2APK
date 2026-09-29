@@ -102,8 +102,8 @@ def load_icon(icon_path: str, app_name: str) -> Image.Image:
     source = ROOT / icon_path
 
     if source.is_file():
-        if source.suffix.lower() != ".png":
-            fail("icon must point to a PNG file.")
+        if source.suffix.lower() not in {".png", ".jpg", ".jpeg"}:
+            fail("icon must point to a PNG, JPG, or JPEG file.")
 
         try:
             image = Image.open(source).convert("RGBA")
