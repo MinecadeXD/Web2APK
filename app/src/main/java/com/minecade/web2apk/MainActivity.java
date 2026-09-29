@@ -12,6 +12,8 @@ import androidx.core.splashscreen.SplashScreen;
 
 public final class MainActivity extends android.app.Activity {
 
+    private boolean customTabLaunched;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         SplashScreen.installSplashScreen(this);
@@ -19,6 +21,18 @@ public final class MainActivity extends android.app.Activity {
 
         if (savedInstanceState == null) {
             openWebsite();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // The Custom Tab is a separate activity. If the user closes it, finish
+        // this launcher activity as well so Android Back never reveals a blank
+        // Web2APK screen.
+        if (customTabLaunched) {
+            finish();
         }
     }
 
@@ -31,6 +45,7 @@ public final class MainActivity extends android.app.Activity {
                 .build();
 
         try {
+            customTabLaunched = true;
             customTabsIntent.launchUrl(this, uri);
         } catch (ActivityNotFoundException exception) {
             Toast.makeText(
@@ -39,6 +54,7 @@ public final class MainActivity extends android.app.Activity {
                     Toast.LENGTH_LONG
             ).show();
 
+            customTabLaunched = true;
             Intent fallback = new Intent(Intent.ACTION_VIEW, uri);
             try {
                 startActivity(fallback);
