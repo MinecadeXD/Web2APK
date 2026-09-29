@@ -222,7 +222,8 @@ def main() -> None:
     write_icon(image)
     write_resources(app_name, website_url, choose_background(image))
 
-    safe_name = re.sub(r"\\s+", " ", app_name).strip()\n    safe_name = re.sub(r"[^A-Za-z0-9._ -]+", "_", safe_name).strip(" ._-") or "Website"
+    safe_name = re.sub(r"\s+", " ", app_name).strip()
+    safe_name = re.sub(r"[^A-Za-z0-9._ -]+", "_", safe_name).strip(" ._-") or "Website"
 
     write_github_env(
         {
