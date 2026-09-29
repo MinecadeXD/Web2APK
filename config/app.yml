@@ -22,7 +22,7 @@
 # Example:
 #   app_name: "HidenCloud FreePanel"
 #
-app_name: "Website"
+app_name: "CSM Testcenter"
 
 
 # ------------------------------------------------------------
@@ -38,7 +38,7 @@ app_name: "Website"
 # Example:
 #   website_url: "https://freepanel.hidencloud.com/"
 #
-website_url: "https://example.com/"
+website_url: "https://www.csm-testcenter.org/test?do=show&subdo=common&test=file_upload"
 
 
 # ------------------------------------------------------------
@@ -57,7 +57,7 @@ website_url: "https://example.com/"
 # Example:
 #   version: "1.0.0"
 #
-version: "1.0.0"
+version: "1.7.2"
 
 
 # ------------------------------------------------------------
@@ -84,7 +84,7 @@ version: "1.0.0"
 #   package_suffix: "mywebsite"
 #   → com.minecade.mywebsite
 #
-package_suffix: "website"
+package_suffix: "csm"
 
 
 # ------------------------------------------------------------
