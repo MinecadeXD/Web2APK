@@ -45,10 +45,10 @@ jobs:
         with:
           gradle-version: "9.6.0"
 
-      - name: Build debug APK
+      - name: Build release APK
         run: >
           gradle
-          :app:assembleDebug
+          :app:assembleRelease
           --no-daemon
           -Pweb2apk.version="$WEB2APK_VERSION"
           -Pweb2apk.versionCode="$WEB2APK_VERSION_CODE"
@@ -57,11 +57,11 @@ jobs:
       - name: Rename APK
         run: |
           mkdir -p output
-          cp app/build/outputs/apk/debug/app-debug.apk "output/${WEB2APK_SAFE_NAME}-v${WEB2APK_VERSION}-debug.apk"
+          cp app/build/outputs/apk/release/app-release-unsigned.apk "output/${WEB2APK_SAFE_NAME}-v${WEB2APK_VERSION}.apk"
 
-      - name: Upload debug APK artifact
+      - name: Upload release APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.WEB2APK_SAFE_NAME }}-v${{ env.WEB2APK_VERSION }}-debug
+          name: ${{ env.WEB2APK_SAFE_NAME }}-v${{ env.WEB2APK_VERSION }}
           path: output/*.apk
           if-no-files-found: error
