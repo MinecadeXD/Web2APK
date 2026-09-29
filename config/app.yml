@@ -20,9 +20,9 @@
 #   Normal text.
 #
 # Example:
-#   app_name: "HidenCloud FreePanel"
+#   app_name: "Website"
 #
-app_name: "HidenCloud"
+app_name: "Website"
 
 
 # ------------------------------------------------------------
@@ -36,9 +36,9 @@ app_name: "HidenCloud"
 #   A complete HTTPS URL.
 #
 # Example:
-#   website_url: "https://freepanel.hidencloud.com/"
+#   website_url: "https://example.com/"
 #
-website_url: "https://freepanel.hidencloud.com/"
+website_url: "https://example.com/"
 
 
 # ------------------------------------------------------------
@@ -57,7 +57,7 @@ website_url: "https://freepanel.hidencloud.com/"
 # Example:
 #   version: "1.0.0"
 #
-version: "1.7.2"
+version: "1.0.0"
 
 
 # ------------------------------------------------------------
@@ -78,13 +78,13 @@ version: "1.7.2"
 #
 # Examples:
 #
-#   package_suffix: "freepanel"
-#   → com.minecade.freepanel
+#   package_suffix: "website"
+#   → com.minecade.website
 #
 #   package_suffix: "mywebsite"
 #   → com.minecade.mywebsite
 #
-package_suffix: "hidencloud"
+package_suffix: "website"
 
 
 # ------------------------------------------------------------
