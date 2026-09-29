@@ -126,7 +126,23 @@ def load_icon(icon_path: str, app_name: str) -> Image.Image:
 def write_icon(image: Image.Image) -> None:
     DRAWABLE_DIR.mkdir(parents=True, exist_ok=True)
     FALLBACK_VECTOR.unlink(missing_ok=True)
+
+    # Keep the full-size launcher icon, but create a padded copy for the
+    # Android 12+ splash screen. The splash icon is masked, so padding keeps
+    # artwork near the edges from being clipped.
     image.save(DRAWABLE_DIR / "app_icon.png", format="PNG", optimize=True)
+
+    splash = Image.new("RGBA", (1024, 1024), (0, 0, 0, 0))
+    splash_size = 640
+    splash_image = ImageOps.contain(
+        image,
+        (splash_size, splash_size),
+        method=Image.Resampling.LANCZOS,
+    )
+    x = (1024 - splash_image.width) // 2
+    y = (1024 - splash_image.height) // 2
+    splash.alpha_composite(splash_image, (x, y))
+    splash.save(DRAWABLE_DIR / "splash_icon.png", format="PNG", optimize=True)
 
 
 def write_resources(app_name: str, website_url: str, rgb: tuple[int, int, int]) -> None:
