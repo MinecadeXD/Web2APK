@@ -20,6 +20,7 @@ VERSION_RE = re.compile(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$")
 PACKAGE_SUFFIX_RE = re.compile(r"^[a-z0-9]+(?:\.[a-z0-9]+)*$")
 URL_RE = re.compile(r"^https://[^\s]+$", re.IGNORECASE)
 HEX_COLOR_RE = re.compile(r"^#[0-9A-Fa-f]{6}$")
+HEX_COLOR_RE = re.compile(r"^#[0-9A-Fa-f]{6}$")
 
 
 def fail(message: str) -> None:
@@ -39,6 +40,25 @@ def version_code(version: str) -> int:
     if code > 2_100_000_000:
         fail("version produces an Android versionCode above the supported range.")
     return code
+
+
+def parse_bool(data: dict, key: str, default: bool) -> bool:
+    value = data.get(key, default)
+    if not isinstance(value, bool):
+        fail(f"'{key}' must be true or false.")
+    return value
+
+
+def parse_color(data: dict, key: str, default: str) -> str:
+    value = data.get(key, default)
+    if not isinstance(value, str) or not value.strip():
+        fail(f"'{key}' must be a color name (white/black) or a 6-digit hex color.")
+    value = value.strip().lower()
+    if value in {"white", "black"}:
+        return "#FFFFFF" if value == "white" else "#000000"
+    if HEX_COLOR_RE.fullmatch(value):
+        return value.upper()
+    fail(f"'{key}' must be 'white', 'black', or a 6-digit hex color such as #121212.")
 
 
 def parse_bool(data: dict, key: str, default: bool) -> bool:
@@ -189,7 +209,8 @@ def write_resources(app_name: str, website_url: str, splash_background: str, too
         f'''<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="splash_background">{hex_color}</color>
-    <color name="app_icon_background">{hex_color}</color>\n    <color name="toolbar_color">{toolbar_color}</color>
+    <color name="app_icon_background">{hex_color}</color>
+    <color name="toolbar_color">{toolbar_color}</color>\n    <color name="toolbar_color">{toolbar_color}</color>
 </resources>
 ''',
         encoding="utf-8",
@@ -200,6 +221,8 @@ def write_resources(app_name: str, website_url: str, splash_background: str, too
 <resources>
     <string name="app_name">{xml_escape(app_name)}</string>
     <string name="website_url">{xml_escape(website_url)}</string>
+    <bool name="show_title">{str(show_title).lower()}</bool>
+    <bool name="url_bar_hiding">{str(url_bar_hiding).lower()}</bool>
 </resources>
 ''',
         encoding="utf-8",
@@ -232,7 +255,11 @@ def main() -> None:
     website_url = required_string(data, "website_url")
     version = required_string(data, "version")
     package_suffix = required_string(data, "package_suffix")
-    icon_path = required_string(data, "icon")\n    splash_background = parse_color(data, "splash_background", "white")\n    toolbar_color = parse_color(data, "toolbar_color", "#121212")\n    show_title = parse_bool(data, "show_title", True)\n    url_bar_hiding = parse_bool(data, "url_bar_hiding", True)
+    icon_path = required_string(data, "icon")
+    splash_background = parse_color(data, "splash_background", "white")
+    toolbar_color = parse_color(data, "toolbar_color", "#121212")
+    show_title = parse_bool(data, "show_title", True)
+    url_bar_hiding = parse_bool(data, "url_bar_hiding", True)\n    splash_background = parse_color(data, "splash_background", "white")\n    toolbar_color = parse_color(data, "toolbar_color", "#121212")\n    show_title = parse_bool(data, "show_title", True)\n    url_bar_hiding = parse_bool(data, "url_bar_hiding", True)
 
     if not APP_NAME_RE.fullmatch(app_name):
         fail("app_name must contain 1-60 characters.")
@@ -269,7 +296,11 @@ def main() -> None:
             "WEB2APK_VERSION": version,
             "WEB2APK_VERSION_CODE": str(version_code(version)),
             "WEB2APK_PACKAGE_SUFFIX": package_suffix,
-            "WEB2APK_SAFE_NAME": safe_name,\n            "WEB2APK_SPLASH_BACKGROUND": splash_background,\n            "WEB2APK_TOOLBAR_COLOR": toolbar_color,\n            "WEB2APK_SHOW_TITLE": str(show_title).lower(),\n            "WEB2APK_URL_BAR_HIDING": str(url_bar_hiding).lower(),
+            "WEB2APK_SAFE_NAME": safe_name,
+            "WEB2APK_SPLASH_BACKGROUND": splash_background,
+            "WEB2APK_TOOLBAR_COLOR": toolbar_color,
+            "WEB2APK_SHOW_TITLE": str(show_title).lower(),
+            "WEB2APK_URL_BAR_HIDING": str(url_bar_hiding).lower(),\n            "WEB2APK_SPLASH_BACKGROUND": splash_background,\n            "WEB2APK_TOOLBAR_COLOR": toolbar_color,\n            "WEB2APK_SHOW_TITLE": str(show_title).lower(),\n            "WEB2APK_URL_BAR_HIDING": str(url_bar_hiding).lower(),
         }
     )
 
@@ -279,7 +310,11 @@ def main() -> None:
     print(f"Version:        {version}")
     print(f"Version code:   {version_code(version)}")
     print(f"Package name:   com.minecade.{package_suffix}")
-    print(f"Icon source:    {icon_path}")\n    print(f"Splash color:   {splash_background}")\n    print(f"Toolbar color:  {toolbar_color}")\n    print(f"Show title:     {show_title}")\n    print(f"URL bar hiding: {url_bar_hiding}")
+    print(f"Icon source:    {icon_path}")
+    print(f"Splash color:   {splash_background}")
+    print(f"Toolbar color:  {toolbar_color}")
+    print(f"Show title:     {show_title}")
+    print(f"URL bar hiding: {url_bar_hiding}")\n    print(f"Splash color:   {splash_background}")\n    print(f"Toolbar color:  {toolbar_color}")\n    print(f"Show title:     {show_title}")\n    print(f"URL bar hiding: {url_bar_hiding}")
 
 
 if __name__ == "__main__":
