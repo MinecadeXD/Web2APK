@@ -43,12 +43,12 @@ public final class MainActivity extends android.app.Activity {
         Uri uri = Uri.parse(websiteUrl);
 
         CustomTabColorSchemeParams colorSchemeParams = new CustomTabColorSchemeParams.Builder()
-                .setToolbarColor(Color.parseColor("#121212"))
+                .setToolbarColor(getColor(R.color.toolbar_color))
                 .build();
 
         CustomTabsIntent customTabsIntent = new CustomTabsIntent.Builder()
-                .setShowTitle(true)
-                .setUrlBarHidingEnabled(true)
+                .setShowTitle(getResources().getBoolean(R.bool.show_title))
+                .setUrlBarHidingEnabled(getResources().getBoolean(R.bool.url_bar_hiding))
                 .setDefaultColorSchemeParams(colorSchemeParams)
                 .setCloseButtonPosition(CustomTabsIntent.CLOSE_BUTTON_POSITION_DEFAULT)
                 .build();
