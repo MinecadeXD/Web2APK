@@ -20,7 +20,6 @@ VERSION_RE = re.compile(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$")
 PACKAGE_SUFFIX_RE = re.compile(r"^[a-z0-9]+(?:\.[a-z0-9]+)*$")
 URL_RE = re.compile(r"^https://[^\s]+$", re.IGNORECASE)
 HEX_COLOR_RE = re.compile(r"^#[0-9A-Fa-f]{6}$")
-HEX_COLOR_RE = re.compile(r"^#[0-9A-Fa-f]{6}$")
 
 
 def fail(message: str) -> None:
@@ -78,7 +77,7 @@ def parse_color(data: dict, key: str, default: str) -> str:
     if HEX_COLOR_RE.fullmatch(value):
         return value.upper()
     fail(f"'{key}' must be 'white', 'black', or a 6-digit hex color such as #121212.")
-
+\n\ndef parse_bool(data: dict, key: str, default: bool) -> bool:\n    value = data.get(key, default)\n    if not isinstance(value, bool):\n        fail(f"'{key}' must be true or false.")\n    return value\n\n\ndef parse_color(data: dict, key: str, default: str) -> str:\n    value = data.get(key, default)\n    if not isinstance(value, str) or not value.strip():\n        fail(f"'{key}' must be a color name (white/black) or a 6-digit hex color.")\n    value = value.strip().lower()\n    if value in {"white", "black"}:\n        return "#FFFFFF" if value == "white" else "#000000"\n    if HEX_COLOR_RE.fullmatch(value):\n        return value.upper()\n    fail(f"'{key}' must be 'white', 'black', or a 6-digit hex color such as #121212.")\n
 
 def xml_escape(value: str) -> str:
     return (
@@ -210,7 +209,7 @@ def write_resources(app_name: str, website_url: str, splash_background: str, too
 <resources>
     <color name="splash_background">{hex_color}</color>
     <color name="app_icon_background">{hex_color}</color>
-    <color name="toolbar_color">{toolbar_color}</color>\n    <color name="toolbar_color">{toolbar_color}</color>
+    <color name="toolbar_color">{toolbar_color}</color>
 </resources>
 ''',
         encoding="utf-8",
