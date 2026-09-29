@@ -111,3 +111,71 @@ package_suffix: "hidencloud"
 #   letter of the app name on a white background.
 #
 icon: "config/icon.jpeg"
+
+
+# ------------------------------------------------------------
+# SPLASH SCREEN BACKGROUND
+# ------------------------------------------------------------
+#
+# What it is:
+#   The background color shown behind the splash icon.
+#
+# Allowed input:
+#   white, black, or a 6-digit hex color.
+#
+# Examples:
+#   splash_background: white
+#   splash_background: black
+#   splash_background: "#121212"
+#
+splash_background: white
+
+
+# ------------------------------------------------------------
+# CUSTOM TAB TOOLBAR COLOR
+# ------------------------------------------------------------
+#
+# What it is:
+#   The toolbar color used by the website's Android Custom Tab.
+#
+# Allowed input:
+#   white, black, or a 6-digit hex color.
+#
+# Example:
+#   toolbar_color: "#121212"
+#
+toolbar_color: "#121212"
+
+
+# ------------------------------------------------------------
+# SHOW WEBSITE TITLE
+# ------------------------------------------------------------
+#
+# What it is:
+#   Controls whether the Custom Tab displays the website title
+#   in its toolbar.
+#
+# Allowed input:
+#   true or false
+#
+# Example:
+#   show_title: true
+#
+show_title: true
+
+
+# ------------------------------------------------------------
+# URL BAR HIDING
+# ------------------------------------------------------------
+#
+# What it is:
+#   Controls whether the Custom Tab URL bar can hide while the
+#   website is scrolled.
+#
+# Allowed input:
+#   true or false
+#
+# Example:
+#   url_bar_hiding: true
+#
+url_bar_hiding: true
