@@ -130,6 +130,27 @@ jobs:
 
           rm -f "$BADGING"
 
+      - name: Generate build summary
+        if: success()
+        env:
+          SUMMARY_APP_NAME: ${{ env.WEB2APK_APP_NAME }}
+          SUMMARY_PACKAGE: com.minecade.${{ env.WEB2APK_PACKAGE_SUFFIX }}
+          SUMMARY_VERSION: ${{ env.WEB2APK_VERSION }}
+          SUMMARY_URL: ${{ env.WEB2APK_WEBSITE_URL }}
+          SUMMARY_APK: ${{ env.WEB2APK_SAFE_NAME }}-v${{ env.WEB2APK_VERSION }}.apk
+        run: |
+          {
+            echo "## Web2APK Build Summary"
+            echo
+            echo "| Field | Value |"
+            echo "|---|---|"
+            echo "| App name | `$SUMMARY_APP_NAME` |"
+            echo "| Package | `$SUMMARY_PACKAGE` |"
+            echo "| Version | `$SUMMARY_VERSION` |"
+            echo "| Website URL | $SUMMARY_URL |"
+            echo "| APK filename | `$SUMMARY_APK` |"
+          } >> "$GITHUB_STEP_SUMMARY"
+
       - name: Upload release APK artifact
         uses: actions/upload-artifact@v4
         with:
